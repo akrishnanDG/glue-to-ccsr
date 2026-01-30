@@ -1,0 +1,60 @@
+# Binaries
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+*.out
+
+# Go build cache
+go.build
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Configuration files with credentials
+config.yaml
+config-*.yaml
+!config.example.yaml
+
+# Generated files
+migration-checkpoint.json
+migration_state.json
+migration-report.json
+migration_report.json
+*.log
+
+# LLM cache
+.llm-cache.json
+
+# AWS credentials
+scripts/aws-creds.json
+
+# Test data
+test-data/
+
+# Coverage files
+*.coverage
+*.coverprofile
+coverage.html
+coverage.txt
+
+# Dependency directories
+vendor/
+
+# Environment files
+.env
+.env.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp

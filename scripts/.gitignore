@@ -1,0 +1,16 @@
+# AWS Credentials - NEVER COMMIT
+aws-creds.json
+
+# Generated schema config
+schema-config.json
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+register-schemas
+generate-schemas
+
+# Go build cache
+go.sum

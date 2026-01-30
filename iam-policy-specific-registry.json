@@ -1,0 +1,32 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GlueSchemaRegistryListAll",
+      "Effect": "Allow",
+      "Action": [
+        "glue:ListRegistries"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "GlueSchemaRegistrySpecificAccess",
+      "Effect": "Allow",
+      "Action": [
+        "glue:GetRegistry",
+        "glue:ListSchemas",
+        "glue:GetSchema",
+        "glue:GetSchemaVersion",
+        "glue:ListSchemaVersions",
+        "glue:QuerySchemaVersionMetadata",
+        "glue:GetTags"
+      ],
+      "Resource": [
+        "arn:aws:glue:us-east-1:123456789012:registry/payments",
+        "arn:aws:glue:us-east-1:123456789012:registry/orders",
+        "arn:aws:glue:us-east-1:123456789012:schema/payments/*",
+        "arn:aws:glue:us-east-1:123456789012:schema/orders/*"
+      ]
+    }
+  ]
+}

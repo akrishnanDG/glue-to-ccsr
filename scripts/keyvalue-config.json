@@ -1,0 +1,364 @@
+{
+  "registry_name": "payments-regsitry",
+  "region": "us-east-2",
+  "schemas": [
+    {
+      "name": "user-event-key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserEventKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "user-event-value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserEventValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "order_created_key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"OrderCreatedKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"OrderCreatedKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"OrderCreatedKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "order_created_value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"OrderCreatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"OrderCreatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"OrderCreatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"OrderCreatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "product.updated.key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"ProductUpdatedKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"ProductUpdatedKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"ProductUpdatedKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "product.updated.value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"ProductUpdatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"ProductUpdatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"ProductUpdatedValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "UserRegisteredKey",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserRegisteredKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserRegisteredKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserRegisteredKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "UserRegisteredValue",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserRegisteredValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserRegisteredValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserRegisteredValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"UserRegisteredValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "accountStatusKey",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"AccountStatusKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"AccountStatusKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"AccountStatusKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "accountStatusValue",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"AccountStatusValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"AccountStatusValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"AccountStatusValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "userId",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "orderId",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"OrderId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"OrderId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"OrderId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "customerId",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"CustomerId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"CustomerId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"CustomerId\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "productID",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"ProductID\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"ProductID\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"ProductID\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "transactionID",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"TransactionID\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"TransactionID\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"TransactionID\",\"namespace\":\"com.test.identifiers\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "userevent_key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserEventKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "userevent_value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserEventValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserEventValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "UserCreatedEvent",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserCreatedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserCreatedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserCreatedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"UserCreatedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "OrderPlacedEvent",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"OrderPlacedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"OrderPlacedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"OrderPlacedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"OrderPlacedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "PaymentProcessedEvent",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"PaymentProcessedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"PaymentProcessedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"PaymentProcessedEvent\",\"namespace\":\"com.test.events\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "identifier-user",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"IdentifierUser\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"IdentifierUser\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"IdentifierUser\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "identifier-order",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"IdentifierOrder\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"IdentifierOrder\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"IdentifierOrder\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "key-user-account",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"KeyUserAccount\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"KeyUserAccount\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"KeyUserAccount\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "key.product.catalog",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"KeyProductCatalog\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"KeyProductCatalog\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"KeyProductCatalog\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "user-profile-update-key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "user-profile-update-value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"UserProfileUpdateValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "notification",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"Notification\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"Notification\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"Notification\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "alert",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"Alert\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"Alert\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"Alert\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "message",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"Message\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"Message\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"Message\",\"namespace\":\"com.test.ambiguous\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "session-key",
+      "compatibility": "FORWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"SessionKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"SessionKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"SessionKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "session-value",
+      "compatibility": "FORWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"SessionValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"SessionValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"SessionValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"SessionValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "metric-key",
+      "compatibility": "FORWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"MetricKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"MetricKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"MetricKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "metric-value",
+      "compatibility": "FORWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"MetricValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"MetricValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"MetricValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "user.account.profile.key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserAccountProfileKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserAccountProfileKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserAccountProfileKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "user.account.profile.value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"UserAccountProfileValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"UserAccountProfileValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"UserAccountProfileValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "order_item_details_key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "order_item_details_value",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":1}]}",
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null}]}",
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}",
+        "{\"type\":\"record\",\"name\":\"OrderItemDetailsValue\",\"namespace\":\"com.test.values\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":4},{\"name\":\"metadata\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"source\",\"type\":\"string\",\"default\":\"system\"}]}"
+      ]
+    },
+    {
+      "name": "composite-user-key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"CompositeUserKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"ref_id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"}]}",
+        "{\"type\":\"record\",\"name\":\"CompositeUserKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"ref_id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2}]}",
+        "{\"type\":\"record\",\"name\":\"CompositeUserKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"ref_id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"composite\",\"type\":\"boolean\",\"default\":true}]}"
+      ]
+    },
+    {
+      "name": "composite-order-key",
+      "compatibility": "BACKWARD",
+      "versions": [
+        "{\"type\":\"record\",\"name\":\"CompositeOrderKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"ref_id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"}]}",
+        "{\"type\":\"record\",\"name\":\"CompositeOrderKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"ref_id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":2}]}",
+        "{\"type\":\"record\",\"name\":\"CompositeOrderKey\",\"namespace\":\"com.test.keys\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"ref_id\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"version\",\"type\":\"int\",\"default\":3},{\"name\":\"composite\",\"type\":\"boolean\",\"default\":true}]}"
+      ]
+    }
+  ]
+}

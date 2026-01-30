@@ -1,0 +1,27 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GlueSchemaRegistryReadWrite",
+      "Effect": "Allow",
+      "Action": [
+        "glue:GetRegistry",
+        "glue:ListRegistries",
+        "glue:GetSchema",
+        "glue:ListSchemas",
+        "glue:GetSchemaVersion",
+        "glue:ListSchemaVersions",
+        "glue:GetSchemaByDefinition",
+        "glue:QuerySchemaVersionMetadata",
+        "glue:GetTags",
+        "glue:CreateRegistry",
+        "glue:CreateSchema",
+        "glue:RegisterSchemaVersion",
+        "glue:UpdateSchema",
+        "glue:PutSchemaVersionMetadata",
+        "glue:TagResource"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GlueSchemaRegistryMinimalReadAccess",
+      "Effect": "Allow",
+      "Action": [
+        "glue:ListRegistries",
+        "glue:GetRegistry",
+        "glue:ListSchemas",
+        "glue:GetSchema",
+        "glue:GetSchemaVersion",
+        "glue:ListSchemaVersions"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

@@ -1,0 +1,443 @@
+# =============================================================================
+# AWS Glue to Confluent Cloud Schema Registry Migration Tool
+# Complete Configuration Reference
+# =============================================================================
+# Copy this file to config.yaml and customize for your migration
+# Usage: glue-to-ccsr migrate --config config.yaml
+#
+# =============================================================================
+# MINIMAL CONFIGURATION (Quick Start)
+# =============================================================================
+# For the simplest possible migration, you only need:
+#
+# aws:
+#   region: us-east-1              # Your AWS region
+#   profile: default               # Or use access_key_id/secret_access_key
+#   registry_names:
+#     - your-registry-name         # Name of your Glue registry
+#
+# confluent_cloud:                 # Skip for dry-run
+#   url: https://psrc-xxx.confluent.cloud
+#   api_key: YOUR_API_KEY
+#   api_secret: YOUR_API_SECRET
+#
+# All other settings will use sensible defaults shown above.
+# =============================================================================
+
+# =============================================================================
+# AWS GLUE SCHEMA REGISTRY CONFIGURATION (REQUIRED)
+# =============================================================================
+aws:
+  # AWS region where your Glue Schema Registry is located (REQUIRED)
+  region: us-east-1
+  
+  # -------------------------------------------------------------------------
+  # AWS Credentials (choose ONE method)
+  # -------------------------------------------------------------------------
+  
+  # Option 1: AWS Profile (RECOMMENDED for local development)
+  profile: default
+  
+  # Option 2: Explicit credentials (for automation/CI/CD)
+  # access_key_id: YOUR_AWS_ACCESS_KEY_ID
+  # secret_access_key: YOUR_AWS_SECRET_ACCESS_KEY
+  
+  # Option 3: Environment variables (set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+  
+  # Option 4: Default credential chain (IAM role, instance profile, etc.)
+  
+  # -------------------------------------------------------------------------
+  # Registry Selection (REQUIRED - choose one)
+  # -------------------------------------------------------------------------
+  
+  # Migrate all registries in the account (default: false)
+  registry_all: false
+  
+  # Specify registry names to migrate (REQUIRED if registry_all = false)
+  registry_names:
+    - payments-registry
+    - orders-registry
+    - users-registry
+  
+  # Exclude registries matching these patterns (OPTIONAL, glob-style)
+  # Leave empty to include all registries
+  registry_exclude: []
+    # - test-*
+    # - dev-*
+    # - temp-*
+  
+  # -------------------------------------------------------------------------
+  # Schema Filtering (OPTIONAL)
+  # -------------------------------------------------------------------------
+  
+  # Filter schemas by name pattern (OPTIONAL, glob-style, default: "" = all schemas)
+  # Examples: "user-*", "*-event", "order.*"
+  schema_filter: ""
+
+# =============================================================================
+# CONFLUENT CLOUD SCHEMA REGISTRY CONFIGURATION
+# =============================================================================
+# REQUIRED for actual migration, NOT REQUIRED for dry-run mode (output.dry_run: true)
+confluent_cloud:
+  # Schema Registry cluster URL (REQUIRED for migration)
+  url: https://psrc-xxx.us-east-2.aws.confluent.cloud
+  
+  # Schema Registry API credentials (REQUIRED for migration)
+  api_key: YOUR_CONFLUENT_API_KEY
+  api_secret: YOUR_CONFLUENT_API_SECRET
+
+# =============================================================================
+# NAMING STRATEGY (OPTIONAL - all have defaults)
+# =============================================================================
+naming:
+  # -------------------------------------------------------------------------
+  # Subject Strategy (how to name subjects in Confluent Cloud)
+  # -------------------------------------------------------------------------
+  # Options:
+  #   topic  - Use schema name as subject base (DEFAULT, RECOMMENDED, fastest)
+  #            Example: user-event-key -> user-event-key
+  #   record - Use record name from schema definition
+  #            Example: UserEvent.avsc -> com.example.UserEvent-value
+  #   llm    - Use LLM for intelligent semantic naming (requires LLM config)
+  #            Example: usr.evt.created -> user-created-value
+  #   custom - Use template below
+  subject_strategy: topic  # DEFAULT
+  
+  # Template for custom strategy (OPTIONAL, only used if subject_strategy=custom)
+  # Available variables: {registry}, {name}, {namespace}, {record}
+  subject_template: "{registry}-{name}"
+  
+  # -------------------------------------------------------------------------
+  # Context Mapping (how to map registries to contexts)
+  # -------------------------------------------------------------------------
+  # Options:
+  #   flat     - All schemas in default context (DEFAULT, RECOMMENDED)
+  #              Example: user-event-key
+  #   registry - Use registry name as context prefix
+  #              Example: .payments-registry:user-event-key
+  #   custom   - Use custom mapping from file
+  context_mapping: flat  # DEFAULT
+  
+  # Context mapping file (OPTIONAL, only used if context_mapping=custom)
+  # Format: registry_name: context_name (one per line)
+  context_mapping_file: ""
+
+# =============================================================================
+# NAME NORMALIZATION (OPTIONAL - all have defaults)
+# =============================================================================
+normalization:
+  # -------------------------------------------------------------------------
+  # Dot Handling
+  # -------------------------------------------------------------------------
+  # Options:
+  #   keep         - Keep dots as-is (user.event.created)
+  #   replace      - Replace dots with replacement char (user-event-created, DEFAULT)
+  #   extract-last - Use only last part (created)
+  normalize_dots: replace  # DEFAULT
+  dot_replacement: "-"     # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Case Normalization
+  # -------------------------------------------------------------------------
+  # Options:
+  #   keep  - Keep original case (UserEvent)
+  #   kebab - Convert to kebab-case (user-event, DEFAULT)
+  #   snake - Convert to snake_case (user_event)
+  #   lower - Convert to lowercase (userevent)
+  normalize_case: kebab  # DEFAULT
+  
+  # Character replacement for invalid chars (spaces, special chars, DEFAULT: "-")
+  invalid_char_replacement: "-"  # DEFAULT
+  
+  # Check for naming collisions before migration (DEFAULT: true)
+  collision_check: true  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Collision Resolution Strategy (DEFAULT: suffix)
+  # -------------------------------------------------------------------------
+  # What to do when naming collisions are detected:
+  #   suffix          - Add numeric suffix (-1, -2, etc.) to colliding names (DEFAULT)
+  #                     Example: product-updated-value, product-updated-value-1
+  #                     ✓ Migrates all schemas, no data loss
+  #   registry-prefix - Prepend registry name to differentiate
+  #                     Example: payments-product-updated-value
+  #   prefer-shorter  - Keep schema with shorter original name (less nested)
+  #                     Example: "product-updated" kept, "product.updated.value" skipped
+  #   skip            - Keep first occurrence, skip duplicates (data loss!)
+  #   fail            - Stop migration and report error (manual resolution required)
+  collision_resolution: suffix  # DEFAULT
+
+# =============================================================================
+# KEY/VALUE SCHEMA DETECTION (OPTIONAL - has built-in defaults)
+# =============================================================================
+key_value:
+  # Custom regex patterns to identify key schemas (OPTIONAL)
+  # Built-in patterns already include: *-key, *_key, *Key, *ID, *Id, composite-*
+  # Add more patterns here if needed
+  key_regex: []
+    # - ".*-key$"
+    # - ".*_key$"
+    # - ".*Key$"
+  
+  # Custom regex patterns to identify value schemas (OPTIONAL)
+  # Built-in patterns already include: *-value, *_value, *Value
+  value_regex: []
+    # - ".*-value$"
+    # - ".*_value$"
+    # - ".*Value$"
+  
+  # Default role when detection is ambiguous (DEFAULT: value)
+  default_role: value  # DEFAULT
+  
+  # File with explicit role overrides (OPTIONAL, JSON/YAML)
+  # Format: { "schema_name": "key" | "value" }
+  role_override_file: ""
+  
+  # Disable built-in detection patterns (DEFAULT: false)
+  # Set to true to use ONLY custom regex patterns
+  disable_builtin_patterns: false  # DEFAULT
+
+# =============================================================================
+# MIGRATION BEHAVIOR (OPTIONAL - all have defaults)
+# =============================================================================
+migration:
+  # -------------------------------------------------------------------------
+  # Version Strategy
+  # -------------------------------------------------------------------------
+  # Options:
+  #   all    - Migrate all versions (DEFAULT, RECOMMENDED)
+  #   latest - Migrate only latest version
+  version_strategy: all  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Reference Handling (for schemas with $ref)
+  # -------------------------------------------------------------------------
+  # Options:
+  #   rewrite - Rewrite references to new subject names (DEFAULT, RECOMMENDED)
+  #   skip    - Skip schemas with references
+  #   fail    - Fail migration if references found
+  reference_strategy: rewrite  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Cross-Registry References
+  # -------------------------------------------------------------------------
+  # Options:
+  #   resolve - Resolve references across registries (DEFAULT, RECOMMENDED)
+  #   fail    - Fail if cross-registry reference found
+  #   warn    - Log warning but continue
+  cross_registry_refs: resolve  # DEFAULT
+
+# =============================================================================
+# METADATA MIGRATION (OPTIONAL - all have defaults)
+# =============================================================================
+metadata:
+  # Strategy for metadata migration
+  # Options:
+  #   migrate - Migrate all metadata (DEFAULT, RECOMMENDED)
+  #   skip    - Skip metadata migration
+  strategy: migrate  # DEFAULT
+  
+  # Migrate Glue tags to Confluent Cloud (DEFAULT: true)
+  migrate_tags: true  # DEFAULT
+  
+  # Migrate schema descriptions (DEFAULT: true)
+  migrate_description: true  # DEFAULT
+
+# =============================================================================
+# LLM CONFIGURATION (for AI-powered subject naming)
+# =============================================================================
+# ONLY REQUIRED if naming.subject_strategy = llm
+# Skip this entire section if using topic/record/custom naming strategies
+llm:
+  # -------------------------------------------------------------------------
+  # Provider Selection (REQUIRED for LLM naming)
+  # -------------------------------------------------------------------------
+  # Options:
+  #   openai    - OpenAI (GPT-4, GPT-3.5)
+  #   anthropic - Anthropic (Claude)
+  #   bedrock   - AWS Bedrock
+  #   ollama    - Local Ollama (FREE, no API key needed, RECOMMENDED for testing)
+  #   local     - Generic OpenAI-compatible local server
+  provider: ollama
+  
+  # -------------------------------------------------------------------------
+  # Model Configuration (REQUIRED for LLM naming)
+  # -------------------------------------------------------------------------
+  # OpenAI:    gpt-4o, gpt-4-turbo, gpt-3.5-turbo
+  # Anthropic: claude-3-opus, claude-3-sonnet
+  # Ollama:    llama3.2, llama3.1, mistral, codellama
+  model: llama3.2
+  
+  # API key (REQUIRED for cloud providers, not needed for Ollama)
+  # Can also use environment variable: OPENAI_API_KEY, ANTHROPIC_API_KEY
+  api_key: ""
+  
+  # Base URL for local LLM providers (REQUIRED for ollama/local)
+  # Ollama:    http://localhost:11434 (DEFAULT)
+  # LM Studio: http://localhost:1234
+  # LocalAI:   http://localhost:8080
+  base_url: http://localhost:11434
+  
+  # -------------------------------------------------------------------------
+  # LLM Optimization (OPTIONAL - all have defaults)
+  # -------------------------------------------------------------------------
+  
+  # Cache file for LLM responses (DEFAULT: .llm-cache.json)
+  # Saves cost and time by reusing previous responses
+  cache_file: .llm-cache.json  # DEFAULT
+  
+  # Maximum cost in USD (DEFAULT: 10.0, safety limit)
+  max_cost: 10.0  # DEFAULT
+  
+  # Rate limit for LLM API calls (DEFAULT: 5 req/sec)
+  rate_limit: 5  # DEFAULT (set in concurrency.llm_rate_limit)
+  
+  # Schema preprocessing (reduces tokens and cost)
+  preprocessing:
+    enabled: true     # DEFAULT: true
+    max_fields: 10    # DEFAULT: 10, max fields to include in prompt
+    max_depth: 3      # DEFAULT: 3, max nesting depth to traverse
+
+# =============================================================================
+# CONCURRENCY & PERFORMANCE (OPTIONAL - all have defaults)
+# =============================================================================
+concurrency:
+  # -------------------------------------------------------------------------
+  # Worker Pool
+  # -------------------------------------------------------------------------
+  # Number of parallel workers for schema processing (DEFAULT: 10)
+  # Recommendations:
+  #   Small registries (<50 schemas):    5-10 workers
+  #   Medium registries (50-500):        10-20 workers
+  #   Large registries (500-1000):       20-50 workers
+  #   Very large registries (1000+):     50-100 workers
+  workers: 10  # DEFAULT
+  
+  # Batch size for bulk operations (DEFAULT: 100)
+  batch_size: 100  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # API Rate Limits (requests per second)
+  # -------------------------------------------------------------------------
+  # AWS Glue SR default: 10-20 req/sec (DEFAULT: 10)
+  # Can request increase via AWS Service Quotas
+  # Higher workers need higher rate limits for performance gain
+  aws_rate_limit: 10  # DEFAULT
+  
+  # Confluent Cloud SR default: 10-20 req/sec (DEFAULT: 10)
+  cc_rate_limit: 10  # DEFAULT
+  
+  # LLM API rate limit (DEFAULT: 5)
+  llm_rate_limit: 5  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Retry Configuration
+  # -------------------------------------------------------------------------
+  retry_attempts: 3  # DEFAULT
+  retry_delay: 5s    # DEFAULT
+
+# =============================================================================
+# CHECKPOINT & RESUME (OPTIONAL - all have defaults)
+# =============================================================================
+checkpoint:
+  # Checkpoint file for resuming interrupted migrations (DEFAULT: migration_state.json)
+  file: migration_state.json  # DEFAULT
+  
+  # Resume from checkpoint if migration was interrupted (DEFAULT: false)
+  resume: false  # DEFAULT
+
+# =============================================================================
+# OUTPUT & LOGGING (OPTIONAL - all have defaults)
+# =============================================================================
+output:
+  # -------------------------------------------------------------------------
+  # Dry-Run Mode
+  # -------------------------------------------------------------------------
+  # Preview migration without making changes (DEFAULT: false)
+  # Validates configuration and shows what would be migrated
+  dry_run: false  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Report Configuration
+  # -------------------------------------------------------------------------
+  # Migration report file (DEFAULT: migration_report.json)
+  report_file: migration_report.json  # DEFAULT
+  
+  # Report format (DEFAULT: table)
+  # Options: table, json, csv
+  format: table  # DEFAULT
+  
+  # Show real-time progress bar (DEFAULT: true)
+  progress: true  # DEFAULT
+  
+  # -------------------------------------------------------------------------
+  # Logging
+  # -------------------------------------------------------------------------
+  # Log file path (DEFAULT: migration.log, empty = stdout only)
+  log_file: migration.log  # DEFAULT
+  
+  # Log level (DEFAULT: info)
+  # Options: debug, info, warn, error
+  log_level: info  # DEFAULT
+
+# =============================================================================
+# EXAMPLE CONFIGURATIONS
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Example 1: Simple Dry-Run (Recommended First Step)
+# -----------------------------------------------------------------------------
+# aws:
+#   region: us-east-2
+#   profile: default
+#   registry_names:
+#     - my-registry
+# naming:
+#   subject_strategy: topic
+#   context_mapping: flat
+# output:
+#   dry_run: true
+#
+# Command: glue-to-ccsr migrate --config config.yaml
+
+# -----------------------------------------------------------------------------
+# Example 2: Fast Migration (50 workers, high rate limit)
+# -----------------------------------------------------------------------------
+# aws:
+#   region: us-east-2
+#   access_key_id: YOUR_KEY
+#   secret_access_key: YOUR_SECRET
+#   registry_names:
+#     - my-registry
+# confluent_cloud:
+#   url: https://psrc-xxx.confluent.cloud
+#   api_key: YOUR_CC_KEY
+#   api_secret: YOUR_CC_SECRET
+# naming:
+#   subject_strategy: topic
+#   context_mapping: flat
+# concurrency:
+#   workers: 50
+#   aws_rate_limit: 50
+# output:
+#   dry_run: false
+
+# -----------------------------------------------------------------------------
+# Example 3: LLM-Powered Naming with Local Ollama
+# -----------------------------------------------------------------------------
+# aws:
+#   region: us-east-2
+#   profile: default
+#   registry_names:
+#     - my-registry
+# naming:
+#   subject_strategy: llm
+# llm:
+#   provider: ollama
+#   model: llama3.2
+#   base_url: http://localhost:11434
+# concurrency:
+#   workers: 20
+#   llm_rate_limit: 10
+# output:
+#   dry_run: true

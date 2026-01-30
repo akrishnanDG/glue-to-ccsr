@@ -1,0 +1,32 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GlueSchemaRegistryReadAccess",
+      "Effect": "Allow",
+      "Action": [
+        "glue:ListRegistries",
+        "glue:GetRegistry",
+        "glue:ListSchemas",
+        "glue:GetSchema",
+        "glue:GetSchemaVersion",
+        "glue:ListSchemaVersions",
+        "glue:GetSchemaByDefinition",
+        "glue:QuerySchemaVersionMetadata",
+        "glue:GetTags"
+      ],
+      "Resource": [
+        "arn:aws:glue:*:*:registry/*",
+        "arn:aws:glue:*:*:schema/*"
+      ]
+    },
+    {
+      "Sid": "GlueSchemaRegistryListAll",
+      "Effect": "Allow",
+      "Action": [
+        "glue:ListRegistries"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
