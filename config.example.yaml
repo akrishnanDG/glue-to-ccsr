@@ -122,6 +122,33 @@ naming:
   # Format: registry_name: context_name (one per line)
   context_mapping_file: ""
 
+  # -------------------------------------------------------------------------
+  # Custom Name Mapping (OPTIONAL - explicit schema-to-subject overrides)
+  # -------------------------------------------------------------------------
+  # Path to a YAML file with explicit schema-to-subject name mappings.
+  # Mapped schemas bypass the entire naming pipeline (no normalization,
+  # no auto-suffixing). Unmapped schemas use the configured subject_strategy.
+  #
+  # The mapping file supports three styles:
+  #
+  #   # Simple: schema name -> subject (matches any registry)
+  #   mappings:
+  #     "UserCreatedEvent": "user-created-value"
+  #     "OrderPlaced": "order-placed-value"
+  #
+  #   # Qualified: registry:schema -> subject (specific registry only)
+  #   qualified_mappings:
+  #     "payments-registry:PaymentEvent": "payment-event-value"
+  #
+  #   # Extended: full control with optional role/context overrides
+  #   extended_mappings:
+  #     - source: "UserKey"
+  #       subject: "user-key"
+  #       role: "key"           # optional: override detected role
+  #       context: ".users"     # optional: override context
+  #
+  name_mapping_file: ""  # DEFAULT: no custom mappings
+
 # =============================================================================
 # NAME NORMALIZATION (OPTIONAL - all have defaults)
 # =============================================================================
@@ -291,7 +318,12 @@ llm:
   
   # Rate limit for LLM API calls (DEFAULT: 5 req/sec)
   rate_limit: 5  # DEFAULT (set in concurrency.llm_rate_limit)
-  
+
+  # Token pricing (cost per token, used for cost tracking)
+  # Default values are for gpt-4o. Adjust for your model.
+  input_token_cost: 0.000005   # DEFAULT: $5 per million input tokens
+  output_token_cost: 0.000015  # DEFAULT: $15 per million output tokens
+
   # Schema preprocessing (reduces tokens and cost)
   preprocessing:
     enabled: true     # DEFAULT: true

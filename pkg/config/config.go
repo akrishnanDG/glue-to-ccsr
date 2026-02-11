@@ -69,6 +69,7 @@ type NamingConfig struct {
 	SubjectTemplate    string `yaml:"subject_template"`    // for custom strategy
 	ContextMapping     string `yaml:"context_mapping"`     // registry, flat, custom
 	ContextMappingFile string `yaml:"context_mapping_file"`
+	NameMappingFile    string `yaml:"name_mapping_file"`   // explicit schema-to-subject mappings
 }
 
 // NormalizationConfig holds name normalization configuration
@@ -106,13 +107,15 @@ type MetadataConfig struct {
 
 // LLMConfig holds LLM configuration
 type LLMConfig struct {
-	Provider   string  `yaml:"provider"`    // openai, anthropic, bedrock, ollama, local
-	Model      string  `yaml:"model"`
-	APIKey     string  `yaml:"api_key"`
-	BaseURL    string  `yaml:"base_url"`    // for local LLMs
-	CacheFile  string  `yaml:"cache_file"`
-	MaxCost    float64 `yaml:"max_cost"`
-	RateLimit  int     `yaml:"rate_limit"`
+	Provider        string  `yaml:"provider"`          // openai, anthropic, bedrock, ollama, local
+	Model           string  `yaml:"model"`
+	APIKey          string  `yaml:"api_key"`
+	BaseURL         string  `yaml:"base_url"`          // for local LLMs
+	CacheFile       string  `yaml:"cache_file"`
+	MaxCost         float64 `yaml:"max_cost"`
+	RateLimit       int     `yaml:"rate_limit"`
+	InputTokenCost  float64 `yaml:"input_token_cost"`  // cost per token for input/prompt
+	OutputTokenCost float64 `yaml:"output_token_cost"` // cost per token for output/completion
 }
 
 // ConcurrencyConfig holds concurrency configuration
@@ -175,9 +178,11 @@ func NewDefaultConfig() *Config {
 			MigrateDescription: true,
 		},
 		LLM: LLMConfig{
-			Provider:  "openai",
-			Model:     "gpt-4o",
-			RateLimit: 5,
+			Provider:        "openai",
+			Model:           "gpt-4o",
+			RateLimit:       5,
+			InputTokenCost:  0.000005,  // $5 per million input tokens (gpt-4o)
+			OutputTokenCost: 0.000015,  // $15 per million output tokens (gpt-4o)
 		},
 		Concurrency: ConcurrencyConfig{
 			Workers:       10,

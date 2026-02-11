@@ -15,20 +15,40 @@ import (
 
 // NomenclatureMapper maps AWS Glue schema names to Confluent Cloud subject names
 type NomenclatureMapper struct {
-	config     *config.Config
-	normalizer *normalizer.Normalizer
-	kvDetector *keyvalue.Detector
-	llmNamer   *llm.Namer
-	template   *template.Template
+	config          *config.Config
+	normalizer      *normalizer.Normalizer
+	kvDetector      *keyvalue.Detector
+	llmNamer        *llm.Namer
+	template        *template.Template
+	customMappings  *loadedCustomMappings
+	contextMappings map[string]string // registry_name -> context_name
 }
 
 // New creates a new NomenclatureMapper
-func New(cfg *config.Config, norm *normalizer.Normalizer, kvDet *keyvalue.Detector, llmNmr *llm.Namer) *NomenclatureMapper {
+func New(cfg *config.Config, norm *normalizer.Normalizer, kvDet *keyvalue.Detector, llmNmr *llm.Namer) (*NomenclatureMapper, error) {
 	m := &NomenclatureMapper{
 		config:     cfg,
 		normalizer: norm,
 		kvDetector: kvDet,
 		llmNamer:   llmNmr,
+	}
+
+	// Load custom name mappings if specified
+	if cfg.Naming.NameMappingFile != "" {
+		mappings, err := loadCustomMappings(cfg.Naming.NameMappingFile)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load custom name mappings: %w", err)
+		}
+		m.customMappings = mappings
+	}
+
+	// Load context mappings if using custom context mapping
+	if cfg.Naming.ContextMapping == "custom" && cfg.Naming.ContextMappingFile != "" {
+		ctxMappings, err := loadContextMappings(cfg.Naming.ContextMappingFile)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load context mapping file: %w", err)
+		}
+		m.contextMappings = ctxMappings
 	}
 
 	// Parse custom template if using custom strategy
@@ -39,7 +59,7 @@ func New(cfg *config.Config, norm *normalizer.Normalizer, kvDet *keyvalue.Detect
 		}
 	}
 
-	return m
+	return m, nil
 }
 
 // MapAll maps all schemas to Confluent Cloud subjects
@@ -64,6 +84,32 @@ func (m *NomenclatureMapper) MapSchema(ctx context.Context, schema *models.GlueS
 		SourceSchemaName: schema.Name,
 		SourceVersions:   len(schema.Versions),
 		Status:           models.MappingStatusReady,
+	}
+
+	// Check custom name mappings first (highest priority)
+	if customMapping, found := m.lookupCustomMapping(schema.RegistryName, schema.Name); found {
+		mapping.TargetSubject = customMapping.Subject
+		mapping.NamingStrategy = "custom-mapping"
+		mapping.NamingReason = "Custom name mapping file"
+		mapping.Transformations = []string{fmt.Sprintf("custom-mapping: %s -> %s", schema.Name, customMapping.Subject)}
+
+		// Use overridden role if provided, otherwise detect normally
+		if customMapping.Role != "" {
+			mapping.DetectedRole = models.SchemaRole(customMapping.Role)
+		} else {
+			parsed := m.parseSchemaMetadata(schema)
+			detection := m.kvDetector.Detect(schema.RegistryName, schema.Name, parsed)
+			mapping.DetectedRole = detection.Role
+		}
+
+		// Use overridden context if provided, otherwise generate normally
+		if customMapping.Context != "" {
+			mapping.TargetContext = customMapping.Context
+		} else {
+			mapping.TargetContext = m.generateContext(schema.RegistryName)
+		}
+
+		return mapping, nil
 	}
 
 	// Parse the schema to extract metadata
@@ -98,7 +144,11 @@ func (m *NomenclatureMapper) generateContext(registryName string) string {
 		// All schemas in default context
 		return ""
 	case "custom":
-		// TODO: Load from context mapping file
+		if m.contextMappings != nil {
+			if ctx, ok := m.contextMappings[registryName]; ok {
+				return "." + ctx
+			}
+		}
 		return "." + registryName
 	default:
 		return "." + registryName

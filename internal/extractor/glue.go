@@ -18,9 +18,19 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// GlueAPI defines the AWS Glue operations used by the extractor.
+type GlueAPI interface {
+	ListRegistries(ctx context.Context, params *glue.ListRegistriesInput, optFns ...func(*glue.Options)) (*glue.ListRegistriesOutput, error)
+	GetRegistry(ctx context.Context, params *glue.GetRegistryInput, optFns ...func(*glue.Options)) (*glue.GetRegistryOutput, error)
+	ListSchemas(ctx context.Context, params *glue.ListSchemasInput, optFns ...func(*glue.Options)) (*glue.ListSchemasOutput, error)
+	GetSchema(ctx context.Context, params *glue.GetSchemaInput, optFns ...func(*glue.Options)) (*glue.GetSchemaOutput, error)
+	ListSchemaVersions(ctx context.Context, params *glue.ListSchemaVersionsInput, optFns ...func(*glue.Options)) (*glue.ListSchemaVersionsOutput, error)
+	GetSchemaVersion(ctx context.Context, params *glue.GetSchemaVersionInput, optFns ...func(*glue.Options)) (*glue.GetSchemaVersionOutput, error)
+}
+
 // GlueExtractor extracts schemas from AWS Glue Schema Registry
 type GlueExtractor struct {
-	client      *glue.Client
+	client      GlueAPI
 	config      *config.Config
 	rateLimiter *rate.Limiter
 }
@@ -63,6 +73,15 @@ func New(cfg *config.Config) (*GlueExtractor, error) {
 		config:      cfg,
 		rateLimiter: limiter,
 	}, nil
+}
+
+// NewWithClient creates a GlueExtractor with an injected client (for testing).
+func NewWithClient(cfg *config.Config, client GlueAPI, limiter *rate.Limiter) *GlueExtractor {
+	return &GlueExtractor{
+		client:      client,
+		config:      cfg,
+		rateLimiter: limiter,
+	}
 }
 
 // ExtractAll extracts all schemas from all specified registries

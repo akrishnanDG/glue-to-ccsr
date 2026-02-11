@@ -3,6 +3,7 @@ package migrator
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"sync/atomic"
 	"time"
 
@@ -81,7 +82,10 @@ func New(cfg *config.Config) (*Migrator, error) {
 	}
 
 	// Create mapper
-	mpr := mapper.New(cfg, norm, kvDet, llmNmr)
+	mpr, err := mapper.New(cfg, norm, kvDet, llmNmr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create mapper: %w", err)
+	}
 
 	// Create validator
 	val := validator.New(cfg)
@@ -109,30 +113,53 @@ func New(cfg *config.Config) (*Migrator, error) {
 	}, nil
 }
 
+// NewWithDeps creates a Migrator with pre-built dependencies (for testing).
+func NewWithDeps(
+	cfg *config.Config,
+	ext *extractor.GlueExtractor,
+	ldr *loader.ConfluentLoader,
+	mpr *mapper.NomenclatureMapper,
+	norm *normalizer.Normalizer,
+	kvDet *keyvalue.Detector,
+	val *validator.Validator,
+	pool *worker.Pool,
+) *Migrator {
+	return &Migrator{
+		config:     cfg,
+		extractor:  ext,
+		loader:     ldr,
+		mapper:     mpr,
+		normalizer: norm,
+		kvDetector: kvDet,
+		validator:  val,
+		workerPool: pool,
+	}
+}
+
 // Run executes the migration
 func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 	startTime := time.Now()
 	result := &Result{}
 
 	// Step 1: Extract schemas from AWS Glue
-	fmt.Println("[1/5] Extracting schemas from AWS Glue Schema Registry...")
+	slog.Info("extracting schemas from AWS Glue Schema Registry", "step", "1/5")
 	schemas, err := m.extractor.ExtractAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to extract schemas: %w", err)
 	}
-	fmt.Printf("      Found %d schemas across %d registries\n", len(schemas), m.countRegistries(schemas))
+	slog.Info("extraction complete", "schemas", len(schemas), "registries", m.countRegistries(schemas))
 
 	// Step 2: Build dependency graph
-	fmt.Println("\n[2/5] Building dependency graph...")
+	slog.Info("building dependency graph", "step", "2/5")
 	depGraph, err := graph.Build(schemas)
 	if err != nil {
 		return nil, fmt.Errorf("failed to build dependency graph: %w", err)
 	}
 	levels := depGraph.GetLevels()
-	fmt.Printf("      Created %d dependency levels\n", len(levels))
+	slog.Info("dependency graph built", "levels", len(levels))
 
 	// Step 3: Generate mappings
-	fmt.Println("\n[3/5] Generating schema mappings...")
+	slog.Info("generating schema mappings", "step", "3/5")
 	mappings, err := m.mapper.MapAll(ctx, schemas)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate mappings: %w", err)
@@ -167,7 +194,7 @@ func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 	if m.config.Normalization.CollisionCheck && m.config.Normalization.CollisionResolution != "" && m.config.Normalization.CollisionResolution != "fail" {
 		collisions := m.normalizer.DetectCollisions(mappings)
 		if len(collisions) > 0 {
-			fmt.Printf("      Found %d naming collisions, applying '%s' resolution strategy...\n", len(collisions), m.config.Normalization.CollisionResolution)
+			slog.Warn("naming collisions detected", "count", len(collisions), "strategy", m.config.Normalization.CollisionResolution)
 			mappings = m.normalizer.ResolveCollisions(mappings)
 			
 			// Update the mappings in the levels after collision resolution
@@ -189,11 +216,11 @@ func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 	}
 
 	// Step 4: Validate mappings
-	fmt.Println("[4/5] Validating mappings...")
+	slog.Info("validating mappings", "step", "4/5")
 	validationResult := m.validator.ValidateAll(mappings)
 	if validationResult.HasErrors() {
 		for _, e := range validationResult.Errors {
-			fmt.Printf("      ERROR: %s: %s\n", e.Schema, e.Message)
+			slog.Error("validation error", "schema", e.Schema, "message", e.Message)
 		}
 		if m.config.Output.DryRun {
 			// In dry-run mode, continue to show the report
@@ -206,9 +233,8 @@ func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 	if m.config.Normalization.CollisionCheck {
 		collisions := m.normalizer.DetectCollisions(mappings)
 		if len(collisions) > 0 {
-			fmt.Println("      WARNING: Naming collisions detected:")
 			for _, c := range collisions {
-				fmt.Printf("         %v -> %s\n", c.SourceSchemas, c.NormalizedName)
+				slog.Warn("naming collision", "sources", c.SourceSchemas, "target", c.NormalizedName)
 			}
 		}
 	}
@@ -221,24 +247,24 @@ func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 
 	// If dry-run, print report and return
 	if m.config.Output.DryRun {
-		fmt.Println("\n[5/5] DRY RUN - No changes will be made\n")
+		slog.Info("dry run complete, no changes made", "step", "5/5")
 		m.printDryRunReport(plan)
 		result.Report = m.generateReport(plan, startTime, true)
 		return result, nil
 	}
 
 	// Step 6: Execute migration
-	fmt.Println("\n[5/5] Executing migration...")
+	slog.Info("executing migration", "step", "5/5")
 	
 	// Resume from checkpoint if specified
 	var state *models.MigrationState
 	if m.checkpoint != nil && m.config.Checkpoint.Resume {
 		state, err = m.checkpoint.Load()
 		if err != nil {
-			fmt.Printf("      WARNING: Could not load checkpoint: %v, starting fresh\n", err)
+			slog.Warn("could not load checkpoint, starting fresh", "error", err)
 			state = models.NewMigrationState("")
 		} else {
-			fmt.Printf("      Resuming from checkpoint (%d/%d completed)\n", state.CompletedCount, state.TotalSchemas)
+			slog.Info("resuming from checkpoint", "completed", state.CompletedCount, "total", state.TotalSchemas)
 		}
 	} else {
 		state = models.NewMigrationState("")
@@ -248,7 +274,7 @@ func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 
 	// Migrate level by level
 	for _, level := range levels {
-		fmt.Printf("   Processing dependency level %d (%d schemas)...\n", level.Level, len(level.Schemas))
+		slog.Info("processing dependency level", "level", level.Level, "schemas", len(level.Schemas))
 		
 		levelResult, err := m.migrateLevel(ctx, level, state)
 		if err != nil {
@@ -263,7 +289,7 @@ func (m *Migrator) Run(ctx context.Context) (*Result, error) {
 		// Save checkpoint after each level
 		if m.checkpoint != nil {
 			if err := m.checkpoint.Save(state); err != nil {
-				fmt.Printf("      WARNING: Failed to save checkpoint: %v\n", err)
+				slog.Warn("failed to save checkpoint", "error", err)
 			}
 		}
 	}
@@ -420,7 +446,7 @@ func (m *Migrator) migrateLevel(ctx context.Context, level graph.Level, state *m
 			// Print error immediately so user sees what's failing
 			if i < len(toMigrate) {
 				schemaKey := fmt.Sprintf("%s.%s", toMigrate[i].SourceRegistry, toMigrate[i].SourceSchemaName)
-				fmt.Printf("      [ERROR] %s: %v\n", schemaKey, err)
+				slog.Error("schema migration failed", "schema", schemaKey, "error", err)
 			}
 		} else {
 			result.Successful++

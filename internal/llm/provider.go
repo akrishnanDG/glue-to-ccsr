@@ -22,12 +22,14 @@ type Provider interface {
 func NewProvider(cfg *config.Config) (Provider, error) {
 	// Create rate limiter
 	limiter := rate.NewLimiter(rate.Limit(cfg.LLM.RateLimit), 1)
+	inputCost := cfg.LLM.InputTokenCost
+	outputCost := cfg.LLM.OutputTokenCost
 
 	switch cfg.LLM.Provider {
 	case "openai":
-		return NewOpenAIProvider(cfg.LLM.APIKey, cfg.LLM.Model, limiter), nil
+		return NewOpenAIProvider(cfg.LLM.APIKey, cfg.LLM.Model, limiter, inputCost, outputCost), nil
 	case "anthropic":
-		return NewAnthropicProvider(cfg.LLM.APIKey, cfg.LLM.Model, limiter), nil
+		return NewAnthropicProvider(cfg.LLM.APIKey, cfg.LLM.Model, limiter, inputCost, outputCost), nil
 	case "ollama":
 		return NewOllamaProvider(cfg.LLM.BaseURL, cfg.LLM.Model, limiter), nil
 	case "local":
@@ -41,19 +43,23 @@ func NewProvider(cfg *config.Config) (Provider, error) {
 
 // OpenAIProvider implements the Provider interface for OpenAI
 type OpenAIProvider struct {
-	apiKey   string
-	model    string
-	limiter  *rate.Limiter
-	client   *http.Client
+	apiKey          string
+	model           string
+	limiter         *rate.Limiter
+	client          *http.Client
+	inputTokenCost  float64
+	outputTokenCost float64
 }
 
 // NewOpenAIProvider creates a new OpenAI provider
-func NewOpenAIProvider(apiKey, model string, limiter *rate.Limiter) *OpenAIProvider {
+func NewOpenAIProvider(apiKey, model string, limiter *rate.Limiter, inputCost, outputCost float64) *OpenAIProvider {
 	return &OpenAIProvider{
-		apiKey:  apiKey,
-		model:   model,
-		limiter: limiter,
-		client:  &http.Client{Timeout: 60 * time.Second},
+		apiKey:          apiKey,
+		model:           model,
+		limiter:         limiter,
+		client:          &http.Client{Timeout: 60 * time.Second},
+		inputTokenCost:  inputCost,
+		outputTokenCost: outputCost,
 	}
 }
 
@@ -120,27 +126,30 @@ func (p *OpenAIProvider) Complete(ctx context.Context, prompt string) (string, f
 		return "", 0, fmt.Errorf("no response from OpenAI")
 	}
 
-	// Calculate cost (approximate for gpt-4o)
-	cost := float64(result.Usage.PromptTokens)*0.000005 + float64(result.Usage.CompletionTokens)*0.000015
+	cost := float64(result.Usage.PromptTokens)*p.inputTokenCost + float64(result.Usage.CompletionTokens)*p.outputTokenCost
 
 	return result.Choices[0].Message.Content, cost, nil
 }
 
 // AnthropicProvider implements the Provider interface for Anthropic
 type AnthropicProvider struct {
-	apiKey  string
-	model   string
-	limiter *rate.Limiter
-	client  *http.Client
+	apiKey          string
+	model           string
+	limiter         *rate.Limiter
+	client          *http.Client
+	inputTokenCost  float64
+	outputTokenCost float64
 }
 
 // NewAnthropicProvider creates a new Anthropic provider
-func NewAnthropicProvider(apiKey, model string, limiter *rate.Limiter) *AnthropicProvider {
+func NewAnthropicProvider(apiKey, model string, limiter *rate.Limiter, inputCost, outputCost float64) *AnthropicProvider {
 	return &AnthropicProvider{
-		apiKey:  apiKey,
-		model:   model,
-		limiter: limiter,
-		client:  &http.Client{Timeout: 60 * time.Second},
+		apiKey:          apiKey,
+		model:           model,
+		limiter:         limiter,
+		client:          &http.Client{Timeout: 60 * time.Second},
+		inputTokenCost:  inputCost,
+		outputTokenCost: outputCost,
 	}
 }
 
@@ -204,8 +213,7 @@ func (p *AnthropicProvider) Complete(ctx context.Context, prompt string) (string
 		return "", 0, fmt.Errorf("no response from Anthropic")
 	}
 
-	// Calculate cost (approximate for claude-3-5-sonnet)
-	cost := float64(result.Usage.InputTokens)*0.000003 + float64(result.Usage.OutputTokens)*0.000015
+	cost := float64(result.Usage.InputTokens)*p.inputTokenCost + float64(result.Usage.OutputTokens)*p.outputTokenCost
 
 	return result.Content[0].Text, cost, nil
 }

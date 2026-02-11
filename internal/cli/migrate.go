@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/akrishnanDG/glue-to-ccsr/internal/logging"
 	"github.com/akrishnanDG/glue-to-ccsr/internal/migrator"
 	"github.com/akrishnanDG/glue-to-ccsr/pkg/config"
 	"github.com/spf13/cobra"
@@ -69,6 +70,9 @@ See config.example.yaml for all available options.`,
 	flags.StringVar(&cfg.ConfluentCloud.APIKey, "cc-api-key", "", "Confluent Cloud API key")
 	flags.StringVar(&cfg.ConfluentCloud.APISecret, "cc-api-secret", "", "Confluent Cloud API secret")
 	
+	// Naming
+	flags.StringVar(&cfg.Naming.NameMappingFile, "name-mapping-file", "", "YAML file with custom schema-to-subject name mappings")
+
 	// Common Options
 	flags.BoolVar(&cfg.Output.DryRun, "dry-run", false, "Preview without making changes")
 	flags.IntVar(&cfg.Concurrency.Workers, "workers", cfg.Concurrency.Workers, "Number of parallel workers")
@@ -118,6 +122,11 @@ func mergeConfigs(fileConfig, cliConfig *config.Config, cmd *cobra.Command) *con
 		merged.ConfluentCloud.APISecret = cliConfig.ConfluentCloud.APISecret
 	}
 	
+	// Naming
+	if flags.Changed("name-mapping-file") {
+		merged.Naming.NameMappingFile = cliConfig.Naming.NameMappingFile
+	}
+
 	// Common options
 	if flags.Changed("workers") {
 		merged.Concurrency.Workers = cliConfig.Concurrency.Workers
@@ -153,6 +162,9 @@ func runMigrate(ctx context.Context, cfg *config.Config) error {
 	if err := cfg.Validate(); err != nil {
 		return fmt.Errorf("configuration validation failed: %w", err)
 	}
+
+	// Set up structured logging
+	logging.Setup(cfg.Output.LogLevel, cfg.Output.LogFile)
 
 	// Create context with cancellation
 	ctx, cancel := context.WithCancel(ctx)

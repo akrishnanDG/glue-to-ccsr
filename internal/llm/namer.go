@@ -3,6 +3,7 @@ package llm
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/akrishnanDG/glue-to-ccsr/internal/models"
 	"github.com/akrishnanDG/glue-to-ccsr/pkg/config"
@@ -43,7 +44,7 @@ func NewNamer(cfg *config.Config) (*Namer, error) {
 		cache, err = NewCache(cfg.LLM.CacheFile)
 		if err != nil {
 			// Non-fatal - just log and continue without cache
-			fmt.Printf("Warning: failed to load LLM cache: %v\n", err)
+			slog.Warn("failed to load LLM cache", "error", err)
 			cache = NewEmptyCache()
 		}
 	} else {

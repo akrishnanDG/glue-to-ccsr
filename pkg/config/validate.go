@@ -3,7 +3,11 @@ package config
 import (
 	"fmt"
 	"net/url"
+	"os"
 	"regexp"
+	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 // ValidationError represents a configuration validation error
@@ -87,6 +91,25 @@ func (c *Config) Validate() error {
 			Field:   "naming.context_mapping",
 			Message: "must be one of: registry, flat, custom",
 		})
+	}
+
+	// Validate context mapping file when using custom context mapping
+	if c.Naming.ContextMapping == "custom" {
+		if c.Naming.ContextMappingFile == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.context_mapping_file",
+				Message: "context_mapping_file is required when context_mapping is 'custom'",
+			})
+		} else if validationErrs := validateContextMappingFile(c.Naming.ContextMappingFile); len(validationErrs) > 0 {
+			errs = append(errs, validationErrs...)
+		}
+	}
+
+	// Validate name mapping file if specified
+	if c.Naming.NameMappingFile != "" {
+		if validationErrs := validateNameMappingFile(c.Naming.NameMappingFile); len(validationErrs) > 0 {
+			errs = append(errs, validationErrs...)
+		}
 	}
 
 	// Validate normalization
@@ -226,4 +249,155 @@ func (c *Config) Validate() error {
 	}
 
 	return nil
+}
+
+// nameMappingFile is used for YAML deserialization during validation
+type nameMappingFile struct {
+	Mappings          map[string]string       `yaml:"mappings"`
+	QualifiedMappings map[string]string       `yaml:"qualified_mappings"`
+	ExtendedMappings  []nameMappingExtended   `yaml:"extended_mappings"`
+}
+
+type nameMappingExtended struct {
+	Source  string `yaml:"source"`
+	Subject string `yaml:"subject"`
+	Role    string `yaml:"role"`
+	Context string `yaml:"context"`
+}
+
+func validateNameMappingFile(path string) ValidationErrors {
+	var errs ValidationErrors
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		errs = append(errs, ValidationError{
+			Field:   "naming.name_mapping_file",
+			Message: fmt.Sprintf("cannot read file: %v", err),
+		})
+		return errs
+	}
+
+	var file nameMappingFile
+	if err := yaml.Unmarshal(data, &file); err != nil {
+		errs = append(errs, ValidationError{
+			Field:   "naming.name_mapping_file",
+			Message: fmt.Sprintf("invalid YAML: %v", err),
+		})
+		return errs
+	}
+
+	seen := make(map[string]bool)
+	validRoles := map[string]bool{"key": true, "value": true}
+
+	// Validate simple mappings
+	for source, subject := range file.Mappings {
+		if subject == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("empty subject for mapping %q", source),
+			})
+		}
+		if seen[source] {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("duplicate source %q", source),
+			})
+		}
+		seen[source] = true
+	}
+
+	// Validate qualified mappings
+	for source, subject := range file.QualifiedMappings {
+		if subject == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("empty subject for qualified mapping %q", source),
+			})
+		}
+		if !strings.Contains(source, ":") {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("qualified mapping %q must contain ':' (registry:schema)", source),
+			})
+		}
+		if seen[source] {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("duplicate source %q", source),
+			})
+		}
+		seen[source] = true
+	}
+
+	// Validate extended mappings
+	for i, ext := range file.ExtendedMappings {
+		if ext.Source == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("extended_mappings[%d]: source is required", i),
+			})
+		}
+		if ext.Subject == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("extended_mappings[%d]: subject is required", i),
+			})
+		}
+		if ext.Role != "" && !validRoles[ext.Role] {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("extended_mappings[%d]: role must be 'key' or 'value', got %q", i, ext.Role),
+			})
+		}
+		if ext.Source != "" && seen[ext.Source] {
+			errs = append(errs, ValidationError{
+				Field:   "naming.name_mapping_file",
+				Message: fmt.Sprintf("duplicate source %q in extended_mappings[%d]", ext.Source, i),
+			})
+		}
+		if ext.Source != "" {
+			seen[ext.Source] = true
+		}
+	}
+
+	return errs
+}
+
+func validateContextMappingFile(path string) ValidationErrors {
+	var errs ValidationErrors
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		errs = append(errs, ValidationError{
+			Field:   "naming.context_mapping_file",
+			Message: fmt.Sprintf("cannot read file: %v", err),
+		})
+		return errs
+	}
+
+	var mappings map[string]string
+	if err := yaml.Unmarshal(data, &mappings); err != nil {
+		errs = append(errs, ValidationError{
+			Field:   "naming.context_mapping_file",
+			Message: fmt.Sprintf("invalid YAML (expected map of string to string): %v", err),
+		})
+		return errs
+	}
+
+	for registry, context := range mappings {
+		if registry == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.context_mapping_file",
+				Message: "empty registry name in mapping",
+			})
+		}
+		if context == "" {
+			errs = append(errs, ValidationError{
+				Field:   "naming.context_mapping_file",
+				Message: fmt.Sprintf("empty context name for registry %q", registry),
+			})
+		}
+	}
+
+	return errs
 }
