@@ -5,6 +5,8 @@ A high-performance, production-ready Go tool for migrating schemas from AWS Glue
 [![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)](https://golang.org)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+> **Migration Guide**: For a comprehensive end-to-end migration guide covering dual-read strategy, producer migration, and complete switchover, see the [AWS Glue to Confluent SR Migration Demo](https://github.com/akrishnanDG/aws-glue-confluent-sr-migration-demo).
+
 ## Features
 
 ### Core Capabilities
@@ -1073,6 +1075,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
+- **Migration Guide**: [AWS Glue to Confluent SR Migration Demo](https://github.com/akrishnanDG/aws-glue-confluent-sr-migration-demo) — end-to-end migration strategy with dual-read, producer migration, and switchover
 - **Issues**: [GitHub Issues](https://github.com/akrishnanDG/glue-to-ccsr/issues)
 - **Documentation**: This README and `config.example.yaml`
 - **Examples**: See [Examples](#examples) section
