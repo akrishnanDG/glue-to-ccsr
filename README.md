@@ -373,6 +373,63 @@ naming:
   context_mapping_file: context-map.yaml
 ```
 
+### Custom Name Mappings
+
+For cases where you need explicit control over specific subject names, you can provide a custom name mapping file. This is useful when you have thousands of schemas but only need to override naming for a handful of them — unmapped schemas fall through to the configured naming strategy automatically.
+
+**Enable via config:**
+
+```yaml
+naming:
+  subject_strategy: topic              # handles unmapped schemas
+  name_mapping_file: "name-mappings.yaml"  # overrides for specific schemas
+```
+
+**Or via CLI flag:**
+
+```bash
+glue-to-ccsr migrate --config config.yaml --name-mapping-file name-mappings.yaml
+```
+
+The mapping file supports three styles, all usable in the same file:
+
+**1. Simple Mappings** (match by schema name across any registry):
+
+```yaml
+mappings:
+  "UserCreatedEvent": "user-created-value"
+  "OrderPlaced": "order-placed-value"
+```
+
+**2. Qualified Mappings** (registry-specific, using `registry:schema`):
+
+```yaml
+qualified_mappings:
+  "payments-registry:PaymentEvent": "payment-event-value"
+  "orders-registry:OrderEvent": "order-event-value"
+```
+
+**3. Extended Mappings** (full control with optional role and context overrides):
+
+```yaml
+extended_mappings:
+  - source: "UserKey"
+    subject: "user-key"
+    role: "key"
+    context: ".users"
+  - source: "payments:RefundEvent"
+    subject: "payment-refund-value"
+    role: "value"
+```
+
+**Lookup Priority:**
+
+1. **Qualified match** (`registry:schema`) — checked first
+2. **Simple match** (schema name only) — fallback
+3. **No match** — falls through to configured naming strategy (topic/record/llm/custom)
+
+Mapped schemas bypass the entire naming pipeline (normalization, auto-suffixing, etc.), so the subject name you specify is used exactly as-is.
+
 ### Key/Value Detection
 
 The tool automatically detects whether schemas represent Kafka message keys or values.
